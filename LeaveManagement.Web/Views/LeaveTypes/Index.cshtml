@@ -31,6 +31,7 @@
                 @Html.DisplayFor(modelItem => item.DefaultDays)
             </td>
             <td>
+                <a data-id = "@item.Id" class = "btn btn-primary allocateBtn">Allocate Leave</a>
                 <a class = "btn btn-warning fas fa-edit" asp-action = "Edit" asp-route-id = "@item.Id"></a>
                 <a class = "btn btn-info fas fa-info" asp-action = "Details" asp-route-id = "@item.Id"></a>
                 <a data-id = "@item.Id" class = "btn btn-danger deleteBtn fas fa-trash-alt"></a>
@@ -42,6 +43,9 @@
     <form id = "deleteFrom" asp-action = "Delete">
         <input type = "hidden" id = "leaveTypeId" name = "Id" />
     </form>
+    <form id = "allocation" asp-action = "AllocateLeave">
+        <input type = "hidden" id = "leaveTypeIdAllocation" name = "Id" />
+    </form>
     @section Scripts{
         <script>
             $(function(){
@@ -49,7 +53,7 @@
                 $(".deleteBtn").click(function(e){
                     swal({
                         title: "Are you sure",
-                        test: "Are you sure you want to delete this record?",
+                        text: "Are you sure you want to delete this record?",
                         icon: "warning",
                         buttons: true,
                         dangerMode: true
@@ -62,6 +66,25 @@
                         }
                     });
                 });
+
+                $(".allocateBtn").click(function(e){
+                    swal({
+                        title: "Are you sure",
+                        text: "Are you sure you want to allocate this leave type to all employees?",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true
+                    }).then((confirm) => {
+                        if(confirm){
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            $("#leaveTypeIdAllocation").val(id);
+                            $("#allocation").submit();
+                        }
+                    });
+                });
+
             });
+           
         </script>
     }

@@ -1,0 +1,58 @@
+﻿@model EmployeeAllocationVM
+
+@{
+    ViewData["Title"] = "viewAllocations";
+}
+
+<h1>Leave Allocations for @Model.Firstname @Model.Lastname</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Firstname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Firstname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Lastname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Lastname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DataJoined)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DataJoined)
+        </dd>
+    </dl>
+    <hr />
+    <ol class="list-group list-group-numbered fw-bold"> Leave Allocated
+  @foreach(var leaveType in @Model.leaveAllocations)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+      <div class="fw-bold">@leaveType.LeaveType.Name</div>
+    <ul class="list-group list-group-horizontal">
+  <li class="list-group-item"><span class="badge bg-primary rounded-pill">Allocated Days - @leaveType.LeaveType.DefaultDays</span></li>
+  <li class="list-group-item"><span class="badge bg-info rounded-pill">Remaining Days - @leaveType.NumberOfDays</span></li>
+    <br/>
+    <br/>
+
+    <a class = "btn btn-warning fas fa-edit" asp-action = "EditAllocation" asp-route-id ="@leaveType.Id"> Edit Allocation</a>
+  <li class="list-group-item"></li>
+</ul>
+  </li>
+        }
+    </ol>
+</div>
+<div>
+    <a class = "btn btn-dark" asp-action="Index">Back to List</a>
+</div>
