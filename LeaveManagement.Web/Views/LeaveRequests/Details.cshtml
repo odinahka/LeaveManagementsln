@@ -1,0 +1,135 @@
+﻿@model LeaveRequestVM
+
+@{
+    ViewData["Title"] = "Leave Request Details";
+    string className, headerText;
+    if (Model.Approved == null)
+    {
+        className = "warning";
+        headerText = "Pending";
+
+    }
+    else if(Model.Approved == true)
+    {
+        className = "success";
+        headerText = "Approved";  
+    }
+    else
+    {
+        className = "danger";
+        headerText = "Rejected";
+    }
+}
+<div class = "alert alert-@className" role = "alert">
+    <h4 class = "alert-heading">
+        @headerText
+    </h4>
+    <br />
+    <p>
+        <strong>Employee Name: </strong>@Model.Employee.Firstname @Model.Employee.Lastname
+    </p
+    <br />
+    <p>
+        <strong>Date Requested: </strong>@Model.DateRequested
+    </p>
+</div>
+
+<div>
+    <h4>Leave Request</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LeaveType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LeaveType.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RequestComments)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RequestComments)
+        </dd>
+    </dl>
+</div>
+<br />
+<div>
+    @if(Model.Approved == null)
+    {
+                <form id ="submitApproval" asp-action="ApproveRequest" >
+                <input id = "leaveRequestId" name = "Id" type="hidden"/>
+                <input id = "approval" name = "approved" value ="false" type="hidden"/>
+                </form>
+
+        <ul class="list-group list-group-horizontal">
+            <li class = "list-group-item">
+                <button data-id = "@Model.Id" data-value = "true" class="btn btn-success approveBtn">Approve</button>
+            </li>
+            <li class="list-group-item"></li>
+            <li class = "list-group-item">
+                <button data-id = "@Model.Id" data-value = "false" class="btn btn-danger rejectBtn">Rejected</button>
+            </li>
+        </ul>
+    }
+    <br />
+    <br />
+    <a class="btn btn-dark" asp-action="Index">Back to List</a>
+</div>
+@section Scripts{
+        <script>
+            $(function(){
+                $(".rejectBtn").click(function(e){
+                    swal({
+                        title: "Are you sure",
+                        text: "Are you sure you want to reject this leave?",
+                        icon: "danger",
+                        buttons: true,
+                        dangerMode: true
+                    }).then((confirm) => {
+                        if(confirm){
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            var approval = btn.data("value")
+                            $("#leaveRequestId").val(id);
+                            $("#approval").val(approval);
+                            $("#submitApproval").submit();
+                        }
+                    });
+                });
+
+                $(".approveBtn").click(function(e){
+                    swal({
+                        title: "Are you sure",
+                        text: "Are you sure you want to approve this leave?",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true
+                    }).then((confirm) => {
+                        if(confirm){
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            var approval = btn.data("value")
+                            $("#leaveRequestId").val(id);
+                            $("#approval").val(approval);
+                            $("#submitApproval").submit();
+                        }
+                    });
+                });
+
+            });
+           
+        </script>
+    }

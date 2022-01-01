@@ -37,7 +37,7 @@ namespace LeaveManagement.Web.Controllers
         // GET: EmployeesController/viewAllocations/employeeId
         public async Task<ActionResult> viewAllocations(string id)
         {
-            var model = await leaveAllocationRepository.GetEmployeeAllocation(id);
+            var model = await leaveAllocationRepository.GetEmployeeAllocations(id);
             return View(model);
         }
 

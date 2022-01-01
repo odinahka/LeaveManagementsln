@@ -22,9 +22,10 @@ builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireC
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
+builder.Services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();  
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 builder.Services.AddTransient<IEmailSender>(s => new EmailSender("localhost", 25, "no-reply@leave-management.com"));
-
+builder.Services.AddHttpContextAccessor();  
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

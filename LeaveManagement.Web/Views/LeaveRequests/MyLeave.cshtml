@@ -1,0 +1,126 @@
+﻿@model EmployeeLeaveRequestVM
+
+@{
+    ViewData["Title"] = "My Leave";
+    int countId = 0;
+}
+<div>
+    <ol class="list-group list-group-numbered fw-bold"> Leave Allocated
+  @foreach(var leaveAllocation in @Model.LeaveAllocations)
+        {
+         <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="fw-bold">@leaveAllocation.LeaveType.Name</div>
+         <ul class="list-group list-group-horizontal">
+              <li class="list-group-item"><span class="badge bg-primary rounded-pill">Allocated Days - @leaveAllocation.LeaveType.DefaultDays</span></li>
+              <li class="list-group-item"><span class="badge bg-info rounded-pill">Remaining Days - @leaveAllocation.NumberOfDays</span></li>
+                <br/>
+              <li class="list-group-item"></li>
+        </ul>
+         </li>
+        }
+    </ol>
+</div>
+<hr />
+ <h3>Leave Details</h3>
+    <hr/>
+ <table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].LeaveType.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].DateRequested)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].EndDate)
+            </th>
+            <th>
+                Leave Status
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in @Model.LeaveRequests) {
+            countId++;
+            <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LeaveType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateRequested)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            @if(item.Cancelled){
+            <td><ul class="list-group list-group-horizontal">
+              <li class="list-group-item"><span class="badge bg-secondary rounded-pill">Cancelled</span></li>
+                </ul>
+            </td>
+            }
+            else if(item.Approved == null)
+            {
+             <td><ul class="list-group list-group-horizontal">
+              <li class="list-group-item"><span class="badge bg-warning rounded-pill">Pending</span></li>
+                </ul>
+            </td>
+            }
+            else if (item.Approved.Value)
+            {
+                <td><ul class="list-group list-group-horizontal">
+                <li class="list-group-item"><span class="badge bg-success rounded-pill">Approved</span></li>
+                </ul>
+                </td>      
+            }
+            else if (!item.Approved.Value)
+            {
+                <td><ul class="list-group list-group-horizontal">
+                <li class="list-group-item"><span class="badge bg-danger rounded-pill">Rejected</span></li>
+                </ul>
+                </td>      
+            }
+            @if(item.Approved == null && item.Cancelled == false)
+            {
+                <td><btn data-id = "@Model.LeaveRequests[countId-1].Id" class = "btn btn-danger cancelRequestBtn">Cancel
+                </btn></td>
+            }
+              
+        </tr>
+}
+    </tbody>
+</table>
+            <form id="submitCancelRequest" asp-action = "CancelLeaveRequest">
+                <input id="leaveRequestId" name = "Id" type = "hidden" />
+            </form>
+@section Scripts{
+        <script>
+            $(function(){
+                $(".cancelRequestBtn").click(function(e){
+                    swal({
+                        title: "Are you sure",
+                        text: "Are you sure you want to CANCEL this leave request?",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true
+                    }).then((confirm) => {
+                        if(confirm){
+                            var btn = $(this);
+                            var id = btn.data("id");
+                            $("#leaveRequestId").val(id);
+                            $("#submitCancelRequest").submit();
+                        }
+                    });
+                });
+
+            });
+           
+        </script>
+    }

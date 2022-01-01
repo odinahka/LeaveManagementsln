@@ -5,4 +5,7 @@
 
     $(function(){
         $(".table").DataTable();
+        $(".datepicker").datepicker({
+            dateFormat: "yy-mm-dd"
+        });
         });
