@@ -6,6 +6,7 @@ using LeaveManagement.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,8 +28,13 @@ builder.Services.AddAutoMapper(typeof(MapperConfig));
 builder.Services.AddTransient<IEmailSender>(s => new EmailSender("localhost", 25, "no-reply@leave-management.com"));
 builder.Services.AddHttpContextAccessor();  
 builder.Services.AddControllersWithViews();
+builder.Host.UseSerilog((ctx, lc) =>
+lc.WriteTo.Console()
+.ReadFrom.Configuration(ctx.Configuration));
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
