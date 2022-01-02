@@ -1,7 +1,7 @@
-using LeaveManagement.Web.Configuration;
-using LeaveManagement.Web.Contracts;
-using LeaveManagement.Web.Data;
-using LeaveManagement.Web.Repository;
+using LeaveManagement.Data;
+using LeaveManagement.Application.Configurations;
+using LeaveManagement.Application.Contracts;
+using LeaveManagement.Application.Repositories;
 using LeaveManagement.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
