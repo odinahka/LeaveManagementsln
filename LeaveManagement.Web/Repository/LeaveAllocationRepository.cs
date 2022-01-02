@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using LeaveManagement.Web.Constants;
 using LeaveManagement.Web.Contracts;
 using LeaveManagement.Web.Data;
@@ -15,16 +16,19 @@ namespace LeaveManagement.Web.Repository
         private readonly UserManager<Employee> userManager;
         private readonly ILeaveTypeRepository leaveTypeRepository;
         private readonly IMapper mapper;
+        private readonly AutoMapper.IConfigurationProvider configurationProvider;
 
         public LeaveAllocationRepository(ApplicationDbContext context,
                                             UserManager<Employee> userManager, 
                                             ILeaveTypeRepository leaveTypeRepository,
-                                            IMapper mapper) : base(context)
+                                            IMapper mapper,
+                                            AutoMapper.IConfigurationProvider configurationProvider) : base(context)
         {
             this.context = context;
             this.userManager = userManager;
             this.leaveTypeRepository = leaveTypeRepository;
             this.mapper = mapper;
+            this.configurationProvider = configurationProvider;
         }
 
         public async Task<bool> AllocationExists(int leaveTypeId, string employeeId, int period)
@@ -38,10 +42,12 @@ namespace LeaveManagement.Web.Repository
         {
             var allocations = await context.LeaveAllocations
                 .Include(q => q.LeaveType)
-                .Where(q => q.EmployeeId == employeeId).ToListAsync();
+                .Where(q => q.EmployeeId == employeeId)
+                .ProjectTo<LeaveAllocationVM>(configurationProvider)
+                .ToListAsync();
             var employees = await userManager.FindByIdAsync(employeeId);
             var employeeLeaveAllocationModel = mapper.Map<EmployeeAllocationVM>(employees);
-            employeeLeaveAllocationModel.leaveAllocations = mapper.Map<List<LeaveAllocationVM>>(allocations);
+            employeeLeaveAllocationModel.leaveAllocations = allocations;
             
             return employeeLeaveAllocationModel;
         }

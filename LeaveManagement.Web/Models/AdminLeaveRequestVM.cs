@@ -10,7 +10,7 @@ namespace LeaveManagement.Web.Models
         public int ApprovedRequest { get; set; }
         [Display(Name = "Pending Requests")]
         public int PendingRequest { get; set; }
-        [Display(Name = "Cancelled Requests")]
+        [Display(Name = "Rejected Requests")]
         public int RejectedRequest { get; set; }
         public List<LeaveRequestVM> LeaveRequests { get; set; }
     }
